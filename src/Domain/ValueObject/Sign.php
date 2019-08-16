@@ -11,40 +11,40 @@ class Sign
     /**
      * @var string
      */
-    private $player;
+    private $sign;
 
     /**
-     * @var string
+     * @var self
      */
-    private $bot;
+    private $oppositeSign;
 
     /**
-     * Sign constructor.
-     * @param string $playerSign
+     * @param string $sign
      */
-    public function __construct(string $playerSign)
+    public function __construct(string $sign)
     {
-        if (!in_array($playerSign,  self::AVAILABLE_VALUES,  true)) {
+        if (!in_array($sign,  self::AVAILABLE_VALUES,  true)) {
             throw new \InvalidArgumentException();
         }
 
-        $this->player = $playerSign;
-        $this->bot = $playerSign === self::CROSS ? self::ZERO : self::CROSS;
+        $this->sign = $sign;
+        $oppositeSign = $sign === self::CROSS ?  self::ZERO : self::CROSS;
+        $this->oppositeSign = new self($oppositeSign);
     }
 
     /**
      * @return string
      */
-    public function getPlayer(): string
+    public function getValue(): string
     {
-        return $this->player;
+        return $this->sign;
     }
 
     /**
-     * @return string
+     * @return Sign
      */
-    public function getBot(): string
+    public function getOppositeSign(): self
     {
-        return $this->bot;
+        return $this->oppositeSign;
     }
 }
