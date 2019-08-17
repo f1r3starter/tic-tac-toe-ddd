@@ -4,8 +4,8 @@ namespace App\Domain\ValueObject;
 
 class BoardState
 {
-    private const DEFAULT_STATE = [['', '', ''],['', '', ''],['', '', '']];
-    private const SIDE_LENGTH = 3;
+    public const SIDE_LENGTH = 3;
+    public const SIDES = 2;
 
     /**
      * @var array
@@ -13,10 +13,17 @@ class BoardState
     private $state;
 
     /**
+     * @var array
+     */
+    private $availableMoves;
+
+    /**
      * @param array|null $state
      */
-    public function __construct(array $state = null)
+    public function __construct(?array $state = null)
     {
+        $state = $state ?? $this->getDefaultState();
+
         if (!$this->validateBoard($state)) {
             throw new \InvalidArgumentException();
         }
@@ -30,6 +37,34 @@ class BoardState
     public function getState(): array
     {
         return $this->state;
+    }
+
+    public function getAvailableMoves(): array
+    {
+        if (empty($this->availableMoves)) {
+            $result = [];
+            array_walk($this->state, function (array $row, int $rowIndex) use (&$result) {
+                array_walk($row, function (Sign $sign, int $columnIndex, int $rowIndex) use (&$result) {
+                    if ($sign->equal(new Sign(Sign::EMPTY))) {
+                        $result[] = new Move([$columnIndex, $rowIndex]);
+                    }
+                }, $rowIndex);
+            });
+
+            $this->availableMoves = $result;
+        }
+
+        return $this->availableMoves;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultState(): array
+    {
+        $defaultState = array_fill(0, self::SIDE_LENGTH ^ self::SIDES, new Sign(Sign::EMPTY));
+
+        return array_chunk($defaultState, self::SIDE_LENGTH);
     }
 
     /**

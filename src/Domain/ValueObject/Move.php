@@ -56,6 +56,6 @@ class Move
      */
     private function inRange(int $cell): bool
     {
-        return $cell <= self::MAX_VALUE && $cell >= self::MIN_VALUE;
+        return $cell >= self::MIN_VALUE && $cell <= self::MAX_VALUE;
     }
 }
