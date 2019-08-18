@@ -4,7 +4,6 @@ namespace App\Domain\Entity;
 
 use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
-use App\Domain\ValueObject\Player;
 use App\Domain\ValueObject\Sign;
 
 class Board
@@ -15,9 +14,14 @@ class Board
     private $winner = null;
 
     /**
-     * @var Player
+     * @var Sign
      */
-    private $player;
+    private $playerSign;
+
+    /**
+     * @var Sign
+     */
+    private $lastMove;
 
     /**
      * @var BoardState
@@ -31,13 +35,15 @@ class Board
 
     /**
      * @param BoardState $boardState
-     * @param Player $player
+     * @param Sign $playerSign
      * @param WinnerState|null $winnerState
      */
-    public function __construct(BoardState $boardState, Player $player, ?WinnerState $winnerState = null)
+    public function __construct(BoardState $boardState, Sign $playerSign, ?WinnerState $winnerState = null)
     {
+        $players = [$playerSign,  new Sign($playerSign->getOppositeSign())];
+        $this->lastMove = $players[array_rand($players)];
         $this->boardState = $boardState;
-        $this->player = $player;
+        $this->playerSign = $playerSign;
         $this->winnerState = $winnerState ?? new WinnerState();
     }
 
@@ -47,10 +53,18 @@ class Board
      */
     public function makeMove(Move $move, Sign $sign): void
     {
-        $state = $this->boardState->getState();
-        if (Sign::EMPTY !== $state[$move->getRow()][$move->getColumn()]) {
+        if (Sign::EMPTY === $sign->getValue()) {
             throw new \InvalidArgumentException();
         }
+
+        if (!$this->boardState->isEmptySpot($move->getRow(), $move->getColumn())) {
+            throw new \InvalidArgumentException();
+        }
+
+        $state = $this->boardState->getState();
+
+        $this->lastMove = $sign;
+
         $state[$move->getRow()][$move->getColumn()] = $sign;
         $this->boardState = new BoardState($state);
 
@@ -59,10 +73,31 @@ class Board
     }
 
     /**
+     * @return BoardState
+     */
+    public function getBoardState(): BoardState
+    {
+        return $this->boardState;
+    }
+
+    /**
      * @return Sign|null
      */
     public function getWinner(): ?Sign
     {
         return $this->winner;
+    }
+
+    /**
+     * @return Sign
+     */
+    public function getLastMove(): Sign
+    {
+        return $this->lastMove;
+    }
+
+    public function __clone()
+    {
+        $this->winnerState = clone $this->winnerState;
     }
 }

@@ -52,18 +52,20 @@ class WinnerState
      */
     public function makeMove(Move $move, Sign $sign): void
     {
-        if (Sign::EMPTY !== $sign->getValue()) {
-            $index = Sign::CROSS === $sign->getValue() ? self::CROSS_INDEX : self::O_INDEX;
-
-            $sidesStates = [
-                $this->updateColumn($move->getColumn(), $index),
-                $this->updateRow($move->getRow(), $index),
-                $this->updateDiagonal($move->getColumn(), $move->getRow(), $index),
-                $this->updateOppositeDiagonal($move->getColumn(), $move->getRow(), $index),
-            ];
-
-            $this->hasWinner = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
+        if (Sign::EMPTY === $sign->getValue()) {
+            throw new \InvalidArgumentException();
         }
+
+        $index = Sign::CROSS === $sign->getValue() ? self::CROSS_INDEX : self::O_INDEX;
+
+        $sidesStates = [
+            $this->updateColumn($move->getColumn(), $index),
+            $this->updateRow($move->getRow(), $index),
+            $this->updateDiagonal($move->getColumn(), $move->getRow(), $index),
+            $this->updateOppositeDiagonal($move->getColumn(), $move->getRow(), $index),
+        ];
+
+        $this->hasWinner = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
     }
 
     /**
@@ -71,13 +73,13 @@ class WinnerState
      */
     public function hasWinner(): bool
     {
-        return $this->hasWinner();
+        return $this->hasWinner;
     }
 
     /**
      * @return array
      */
-    private function initSide():  array
+    private function initSide(): array
     {
         return array_fill(0, BoardState::SIDE_LENGTH, [0, 0]);
     }
@@ -113,11 +115,18 @@ class WinnerState
      */
     private function updateDiagonal(int $columnIndex, int $rowIndex, int $signIndex): int
     {
-        return $columnIndex === $rowIndex ? ++$this->diagonal[$columnIndex] : $this->diagonal[$rowIndex];
+        return $columnIndex === $rowIndex ? ++$this->diagonal[$columnIndex][$signIndex] : $this->diagonal[$rowIndex][$signIndex];
     }
 
+    /**
+     * @param int $columnIndex
+     * @param int $rowIndex
+     * @param int $signIndex
+     *
+     * @return int
+     */
     private function updateOppositeDiagonal(int $columnIndex, int $rowIndex, int $signIndex): int
     {
-        return $columnIndex ===  BoardState::SIDE_LENGTH - $rowIndex ? ++$this->oppositeDiagonal[$columnIndex] : $this->oppositeDiagonal[$columnIndex];
+        return $columnIndex === BoardState::SIDE_LENGTH - $rowIndex ? ++$this->oppositeDiagonal[$columnIndex][$signIndex] : $this->oppositeDiagonal[$columnIndex][$signIndex];
     }
 }

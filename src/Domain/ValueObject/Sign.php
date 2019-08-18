@@ -6,7 +6,7 @@ class Sign
 {
     public const CROSS = 'X';
     public const ZERO  = 'O';
-    public const EMPTY  = '';
+    public const EMPTY  = '_';
     private const AVAILABLE_VALUES  = [self::CROSS, self::ZERO, self::EMPTY];
 
     /**
@@ -31,10 +31,9 @@ class Sign
         $this->sign = $sign;
 
         if (self::EMPTY === $sign) {
-            $this->oppositeSign = new self($sign);
+            $this->oppositeSign = $sign;
         } else {
-            $oppositeSign = self::CROSS === $sign ? self::ZERO : self::CROSS;
-            $this->oppositeSign = new self($oppositeSign);
+            $this->oppositeSign = self::CROSS === $sign ? self::ZERO : self::CROSS;
         }
     }
 
@@ -49,7 +48,7 @@ class Sign
     /**
      * @return Sign
      */
-    public function getOppositeSign(): self
+    public function getOppositeSign(): string
     {
         return $this->oppositeSign;
     }

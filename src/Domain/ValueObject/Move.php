@@ -4,9 +4,9 @@ namespace App\Domain\ValueObject;
 
 class Move
 {
+    public const MIN_VALUE = 0;
+    public const MAX_VALUE = 2;
     private const LENGTH = 2;
-    private const MIN_VALUE = 0;
-    private const MAX_VALUE = 2;
 
     /**
      * @var int

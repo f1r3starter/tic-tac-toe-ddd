@@ -39,6 +39,9 @@ class BoardState
         return $this->state;
     }
 
+    /**
+     * @return array
+     */
     public function getAvailableMoves(): array
     {
         if (empty($this->availableMoves)) {
@@ -57,12 +60,19 @@ class BoardState
         return $this->availableMoves;
     }
 
+    public function isEmptySpot(int $row,  int $column): bool
+    {
+        return $this->state[$row][$column]->equal(new Sign(Sign::EMPTY));
+    }
+
     /**
      * @return array
      */
     private function getDefaultState(): array
     {
-        $defaultState = array_fill(0, self::SIDE_LENGTH ^ self::SIDES, new Sign(Sign::EMPTY));
+        $defaultState = array_map(function () {
+            return new Sign(Sign::EMPTY);
+        },  array_fill(0, pow(self::SIDE_LENGTH, self::SIDES), null));
 
         return array_chunk($defaultState, self::SIDE_LENGTH);
     }
