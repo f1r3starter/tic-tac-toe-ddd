@@ -2,14 +2,16 @@
 
 namespace App\Domain\Entity;
 
+use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 
-class WinnerState
+class WinnerState implements \Serializable
 {
     private const CROSS_INDEX = 0;
-    private const O_INDEX = 1;
+    private const ZERO_INDEX = 1;
+    private const INIT_VALUE = [0, 0];
 
     /**
      * @var array
@@ -42,8 +44,8 @@ class WinnerState
 
         $this->columns = $defaultValue;
         $this->rows = $defaultValue;
-        $this->diagonal = $defaultValue;
-        $this->oppositeDiagonal = $defaultValue;
+        $this->diagonal = self::INIT_VALUE;
+        $this->oppositeDiagonal = self::INIT_VALUE;
     }
 
     /**
@@ -53,10 +55,10 @@ class WinnerState
     public function makeMove(Move $move, Sign $sign): void
     {
         if (Sign::EMPTY === $sign->getValue()) {
-            throw new \InvalidArgumentException();
+            throw new IncorrectMoveSign();
         }
 
-        $index = Sign::CROSS === $sign->getValue() ? self::CROSS_INDEX : self::O_INDEX;
+        $index = Sign::CROSS === $sign->getValue() ? self::CROSS_INDEX : self::ZERO_INDEX;
 
         $sidesStates = [
             $this->updateColumn($move->getColumn(), $index),
@@ -81,7 +83,7 @@ class WinnerState
      */
     private function initSide(): array
     {
-        return array_fill(0, BoardState::SIDE_LENGTH, [0, 0]);
+        return array_fill(0, BoardState::SIDE_LENGTH, self::INIT_VALUE);
     }
 
     /**
@@ -115,7 +117,7 @@ class WinnerState
      */
     private function updateDiagonal(int $columnIndex, int $rowIndex, int $signIndex): int
     {
-        return $columnIndex === $rowIndex ? ++$this->diagonal[$columnIndex][$signIndex] : $this->diagonal[$rowIndex][$signIndex];
+        return $columnIndex === $rowIndex ? ++$this->diagonal[$signIndex] : $this->diagonal[$signIndex];
     }
 
     /**
@@ -127,6 +129,34 @@ class WinnerState
      */
     private function updateOppositeDiagonal(int $columnIndex, int $rowIndex, int $signIndex): int
     {
-        return $columnIndex === BoardState::SIDE_LENGTH - $rowIndex ? ++$this->oppositeDiagonal[$columnIndex][$signIndex] : $this->oppositeDiagonal[$columnIndex][$signIndex];
+        return $columnIndex === BoardState::SIDE_LENGTH - $rowIndex - 1 ? ++$this->oppositeDiagonal[$signIndex] : $this->oppositeDiagonal[$signIndex];
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize(): string
+    {
+        return serialize([
+            $this->columns,
+            $this->rows,
+            $this->diagonal,
+            $this->oppositeDiagonal,
+        ]);
+    }
+
+    /**
+     * @param $serialized
+     *
+     * @return void
+     */
+    public function unserialize($serialized): void
+    {
+        list(
+            $this->columns,
+            $this->rows,
+            $this->diagonal,
+            $this->oppositeDiagonal,
+            ) = unserialize($serialized);
     }
 }

@@ -2,11 +2,15 @@
 
 namespace App\Domain\Entity;
 
+use App\Domain\Exception\CellIsOccupied;
+use App\Domain\Exception\GameOver;
+use App\Domain\Exception\IncorrectMoveSign;
+use App\Domain\Exception\SecondMove;
 use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 
-class Board
+class Board implements \Serializable
 {
     /**
      * @var Sign|null
@@ -53,12 +57,20 @@ class Board
      */
     public function makeMove(Move $move, Sign $sign): void
     {
+        if ($this->isGameOver()) {
+            throw new GameOver();
+        }
+
         if (Sign::EMPTY === $sign->getValue()) {
-            throw new \InvalidArgumentException();
+            throw new IncorrectMoveSign();
         }
 
         if (!$this->boardState->isEmptySpot($move->getRow(), $move->getColumn())) {
-            throw new \InvalidArgumentException();
+            throw new CellIsOccupied();
+        }
+
+        if ($this->getLastMove()->equal($sign)) {
+            throw new SecondMove();
         }
 
         $state = $this->boardState->getState();
@@ -96,8 +108,60 @@ class Board
         return $this->lastMove;
     }
 
+    /**
+     * @return Sign
+     */
+    public function getPlayerSign(): Sign
+    {
+        return $this->playerSign;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGameOver(): bool
+    {
+        return empty($this->getBoardState()->getAvailableMoves()) || null !== $this->winner;
+    }
+
     public function __clone()
     {
         $this->winnerState = clone $this->winnerState;
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize(): string
+    {
+        return serialize([
+            $this->winner ? $this->winner->getValue() : null,
+            $this->playerSign->getValue(),
+            $this->lastMove->getValue(),
+            $this->boardState->getState(),
+            serialize($this->winnerState),
+        ]);
+    }
+
+    /**
+     * @param $serialized
+     *
+     * @return void
+     */
+    public function unserialize($serialized): void
+    {
+        list(
+            $winner,
+            $playerSign,
+            $lastMove,
+            $boardState,
+            $winnerState,
+            ) = unserialize($serialized);
+
+        $this->winner = $winner ? new Sign($winner) : $winner;
+        $this->playerSign = new Sign($playerSign);
+        $this->lastMove = new Sign($lastMove);
+        $this->boardState = new BoardState($boardState);
+        $this->winnerState = unserialize($winnerState);
     }
 }

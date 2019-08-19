@@ -2,6 +2,8 @@
 
 namespace App\Domain\ValueObject;
 
+use App\Domain\Exception\IncorrectBoardState;
+
 class BoardState
 {
     public const SIDE_LENGTH = 3;
@@ -18,14 +20,20 @@ class BoardState
     private $availableMoves;
 
     /**
+     * @var Sign
+     */
+    private $emptySign;
+
+    /**
      * @param array|null $state
      */
     public function __construct(?array $state = null)
     {
+        $this->emptySign =  new Sign(Sign::EMPTY);
         $state = $state ?? $this->getDefaultState();
 
         if (!$this->validateBoard($state)) {
-            throw new \InvalidArgumentException();
+            throw new IncorrectBoardState();
         }
 
         $this->state = $state;
@@ -48,8 +56,8 @@ class BoardState
             $result = [];
             array_walk($this->state, function (array $row, int $rowIndex) use (&$result) {
                 array_walk($row, function (Sign $sign, int $columnIndex, int $rowIndex) use (&$result) {
-                    if ($sign->equal(new Sign(Sign::EMPTY))) {
-                        $result[] = new Move([$columnIndex, $rowIndex]);
+                    if ($sign->equal($this->emptySign)) {
+                        $result[] = new Move($rowIndex, $columnIndex);
                     }
                 }, $rowIndex);
             });
@@ -60,9 +68,9 @@ class BoardState
         return $this->availableMoves;
     }
 
-    public function isEmptySpot(int $row,  int $column): bool
+    public function isEmptySpot(int $row, int $column): bool
     {
-        return $this->state[$row][$column]->equal(new Sign(Sign::EMPTY));
+        return $this->state[$row][$column]->equal($this->emptySign);
     }
 
     /**
@@ -71,7 +79,7 @@ class BoardState
     private function getDefaultState(): array
     {
         $defaultState = array_map(function () {
-            return new Sign(Sign::EMPTY);
+            return clone $this->emptySign;
         },  array_fill(0, pow(self::SIDE_LENGTH, self::SIDES), null));
 
         return array_chunk($defaultState, self::SIDE_LENGTH);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Service;
+namespace App\Domain\Strategy;
 
 use App\Domain\Entity\Board;
 use App\Domain\ValueObject\Move;
@@ -11,7 +11,7 @@ class MinMaxBotStrategy implements BotStrategy
     private const WIN_SCORE = 10;
     private const LOSE_SCORE = -10;
     private const DRAW_SCORE = 0;
-    private const MAX_MOVES = 3;
+    private const MAX_MOVES = 100;
     private const INIT_MOVE = 0;
 
     /**
@@ -25,19 +25,13 @@ class MinMaxBotStrategy implements BotStrategy
     private $botSign;
 
     /**
-     * @param Sign $playerSign
-     */
-    public function __construct(Sign $playerSign)
-    {
-        $this->playerSign = $playerSign;
-        $this->botSign = new Sign($playerSign->getOppositeSign());
-    }
-
-    /**
      * @param Board $board
+     * @param Sign $botSign
      */
-    public function makeMove(Board $board): void
+    public function makeMove(Board $board, Sign $botSign): void
     {
+        $this->playerSign = new Sign($botSign->getOppositeSign());
+        $this->botSign = $botSign;
         $this->miniMax($board);
     }
 
@@ -49,12 +43,11 @@ class MinMaxBotStrategy implements BotStrategy
      */
     private function miniMax(Board $board, int $currentMoveNum = self::INIT_MOVE): int
     {
-        if ($currentMoveNum++  ===  self::MAX_MOVES || empty($board->getBoardState()->getAvailableMoves()))
-        {
-            return $this->evaluate($board,  $currentMoveNum);
+        if (self::MAX_MOVES === $currentMoveNum++ || $board->isGameOver()) {
+            return $this->evaluate($board);
         }
 
-        if ($board->getLastMove()->equal($this->botSign)) {
+        if ($board->getLastMove()->equal($this->playerSign)) {
             return $this->maximize($board, $currentMoveNum);
         } else {
             return $this->minimize($board, $currentMoveNum);
@@ -72,12 +65,11 @@ class MinMaxBotStrategy implements BotStrategy
         $availableMoves = $board->getBoardState()->getAvailableMoves();
 
         $bestScore = PHP_INT_MIN;
-        $bestMove = new Move([Move::MIN_VALUE, Move::MIN_VALUE]);
+        $bestMove = new Move(Move::MAX_VALUE, Move::MAX_VALUE);
 
-        $bestMove  = array_reduce($availableMoves,  function (Move $bestMove, Move $move) use ($board, $currentMoveNum, &$bestScore) {
+        $bestMove = array_reduce($availableMoves, function (Move $bestMove, Move $move) use ($board, $currentMoveNum, &$bestScore) {
             $boardCopy = clone $board;
             $boardCopy->makeMove($move, $this->botSign);
-            $this->makeMove($boardCopy);
 
             $score = $this->miniMax($boardCopy, $currentMoveNum);
             if ($score >= $bestScore) {
@@ -86,7 +78,7 @@ class MinMaxBotStrategy implements BotStrategy
             }
 
             return $bestMove;
-        },  $bestMove);
+        }, $bestMove);
 
         $board->makeMove($bestMove, $this->botSign);
 
@@ -104,9 +96,9 @@ class MinMaxBotStrategy implements BotStrategy
         $availableMoves = $board->getBoardState()->getAvailableMoves();
 
         $bestScore = PHP_INT_MAX;
-        $bestMove = new Move([Move::MIN_VALUE, Move::MIN_VALUE]);
+        $bestMove = new Move(Move::MAX_VALUE, Move::MAX_VALUE);
 
-        $bestMove  = array_reduce($availableMoves,  function (Move $bestMove, Move $move) use ($board, $currentMoveNum, &$bestScore) {
+        $bestMove = array_reduce($availableMoves, function (Move $bestMove, Move $move) use ($board, $currentMoveNum, &$bestScore) {
             $boardCopy = clone $board;
             $boardCopy->makeMove($move, $this->playerSign);
 
@@ -117,7 +109,7 @@ class MinMaxBotStrategy implements BotStrategy
             }
 
             return $bestMove;
-        },  $bestMove);
+        }, $bestMove);
 
         $board->makeMove($bestMove, $this->playerSign);
 
@@ -127,16 +119,16 @@ class MinMaxBotStrategy implements BotStrategy
     /**
      * @param Board $board
      *
-     * @param int $currentMoveNum
      * @return int
      */
-    private function evaluate(Board $board, int $currentMoveNum): int
+    private function evaluate(Board $board): int
     {
         $winner = $board->getWinner();
-        if (null === $winner) {
-            return self::DRAW_SCORE;
+
+        if ($board->isGameOver() && null !== $winner) {
+            return $winner->equal($this->botSign) ? self::WIN_SCORE : self::LOSE_SCORE;
         }
 
-        return $winner->equal($this->botSign) ? self::WIN_SCORE - $currentMoveNum : $currentMoveNum - self::LOSE_SCORE;
+        return self::DRAW_SCORE;
     }
 }

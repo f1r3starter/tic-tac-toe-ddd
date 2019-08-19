@@ -2,11 +2,12 @@
 
 namespace App\Domain\ValueObject;
 
+use App\Domain\Exception\MoveIsOutOfRange;
+
 class Move
 {
     public const MIN_VALUE = 0;
     public const MAX_VALUE = 2;
-    private const LENGTH = 2;
 
     /**
      * @var int
@@ -19,18 +20,17 @@ class Move
     private $row;
 
     /**
-     * @param array $value
+     * @param int $row
+     * @param int $column
      */
-    public function __construct(array $value)
+    public function __construct(int $row, int $column)
     {
-        if (\count($value) !== self::LENGTH
-            || !$this->inRange($value[0])
-            || !$this->inRange($value[1])) {
-            throw new \InvalidArgumentException();
+        if ($this->outOfRange($row) || $this->outOfRange($column)) {
+            throw new MoveIsOutOfRange();
         }
 
-        $this->column = $value[0];
-        $this->row = $value[1];
+        $this->column = $column;
+        $this->row = $row;
     }
 
     /**
@@ -54,8 +54,8 @@ class Move
      *
      * @return bool
      */
-    private function inRange(int $cell): bool
+    private function outOfRange(int $cell): bool
     {
-        return $cell >= self::MIN_VALUE && $cell <= self::MAX_VALUE;
+        return $cell < self::MIN_VALUE && $cell > self::MAX_VALUE;
     }
 }
