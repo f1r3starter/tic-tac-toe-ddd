@@ -2,7 +2,7 @@
 
 namespace App\Domain\Exception;
 
-class IncorrectMoveSign  extends \InvalidArgumentException
+class IncorrectMoveSign  extends BadRequestException
 {
     protected $message = 'Sign should be either X or O';
 }

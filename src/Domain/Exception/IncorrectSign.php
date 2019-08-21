@@ -2,7 +2,7 @@
 
 namespace App\Domain\Exception;
 
-class IncorrectSign extends \InvalidArgumentException
+class IncorrectSign extends BadRequestException
 {
     protected $message = 'Incorrect sign value';
 }
