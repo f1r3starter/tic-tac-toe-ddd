@@ -11,7 +11,7 @@ class MinMaxBotStrategy implements BotStrategy
     private const WIN_SCORE = 10;
     private const LOSE_SCORE = -10;
     private const DRAW_SCORE = 0;
-    private const MAX_MOVES = 100;
+    private const MAX_MOVES = 2;
     private const INIT_MOVE = 0;
 
     /**
@@ -43,7 +43,7 @@ class MinMaxBotStrategy implements BotStrategy
      */
     private function miniMax(Board $board, int $currentMoveNum = self::INIT_MOVE): int
     {
-        if (self::MAX_MOVES === $currentMoveNum++ || $board->isGameOver()) {
+        if (self::MAX_MOVES <= $currentMoveNum++ || $board->isGameOver()) {
             return $this->evaluate($board);
         }
 
@@ -72,6 +72,7 @@ class MinMaxBotStrategy implements BotStrategy
             $boardCopy->makeMove($move, $this->botSign);
 
             $score = $this->miniMax($boardCopy, $currentMoveNum);
+            unset($boardCopy);
             if ($score >= $bestScore) {
                 $bestScore = $score;
                 return $move;
@@ -103,6 +104,7 @@ class MinMaxBotStrategy implements BotStrategy
             $boardCopy->makeMove($move, $this->playerSign);
 
             $score = $this->miniMax($boardCopy, $currentMoveNum);
+            unset($boardCopy);
             if ($score <= $bestScore) {
                 $bestScore = $score;
                 return $move;

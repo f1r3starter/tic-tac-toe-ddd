@@ -8,7 +8,7 @@ class Sign implements \JsonSerializable
 {
     public const CROSS = 'X';
     public const ZERO  = 'O';
-    public const EMPTY  = '_';
+    public const EMPTY  = '';
     private const AVAILABLE_VALUES  = [self::CROSS, self::ZERO, self::EMPTY];
 
     /**
@@ -22,9 +22,9 @@ class Sign implements \JsonSerializable
     private $oppositeSign;
 
     /**
-     * @param string $sign
+     * @param string|null $sign
      */
-    public function __construct(string $sign)
+    public function __construct(?string $sign)
     {
         if (!in_array($sign,  self::AVAILABLE_VALUES,  true)) {
             throw new IncorrectSign();

@@ -3,7 +3,6 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Exception\IncorrectMoveSign;
-use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 
@@ -67,7 +66,7 @@ class WinnerState implements \Serializable
             $this->updateOppositeDiagonal($move->getColumn(), $move->getRow(), $index),
         ];
 
-        $this->hasWinner = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
+        $this->hasWinner = \in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
     }
 
     /**
@@ -83,7 +82,7 @@ class WinnerState implements \Serializable
      */
     private function initSide(): array
     {
-        return array_fill(0, BoardState::SIDE_LENGTH, self::INIT_VALUE);
+        return \array_fill(0, BoardState::SIDE_LENGTH, self::INIT_VALUE);
     }
 
     /**

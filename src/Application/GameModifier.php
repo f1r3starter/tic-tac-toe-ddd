@@ -5,7 +5,6 @@ namespace App\Application;
 use App\Application\Exception\GameHasNotBeenStarted;
 use App\Domain\Entity\Board;
 use App\Domain\Strategy\BotStrategy;
-use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 
@@ -51,6 +50,10 @@ class GameModifier
      */
     public function makeMove(int $row, int $column): Board
     {
+        if (!$this->gameStorage->gameStarted()) {
+            throw new GameHasNotBeenStarted();
+        }
+
         $move = new Move($row, $column);
         $board  = $this->gameStorage->restoreGameState();
         $board->makeMove($move, $board->getPlayerSign());
@@ -62,18 +65,17 @@ class GameModifier
     }
 
     /**
-     * @param string $sign
+     * @param string|null $sign
      *
      * @return Board
      */
-    public function chooseSign(string $sign): Board
+    public function chooseSign(?string $sign): Board
     {
         $this->gameStorage->restartGame();
 
         $playerSign = new Sign($sign);
         $botSign = new Sign($playerSign->getOppositeSign());
         $board = new Board(
-            new BoardState(),
             $playerSign
         );
 

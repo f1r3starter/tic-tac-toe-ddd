@@ -50,6 +50,16 @@ class Move
     }
 
     /**
+     * @param Move $move
+     *
+     * @return bool
+     */
+    public function equals(Move $move): bool
+    {
+        return $move->getRow() === $this->row && $move->getColumn() === $this->column;
+    }
+
+    /**
      * @param int $cell
      *
      * @return bool

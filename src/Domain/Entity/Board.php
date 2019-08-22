@@ -2,11 +2,8 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\Exception\CellIsOccupied;
 use App\Domain\Exception\GameOver;
-use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\Exception\SecondMove;
-use App\Domain\ValueObject\BoardState;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 
@@ -38,15 +35,15 @@ class Board implements \Serializable
     private $winnerState;
 
     /**
-     * @param BoardState $boardState
      * @param Sign $playerSign
+     * @param BoardState|null $boardState
      * @param WinnerState|null $winnerState
      */
-    public function __construct(BoardState $boardState, Sign $playerSign, ?WinnerState $winnerState = null)
+    public function __construct(Sign $playerSign, ?BoardState $boardState = null, ?WinnerState $winnerState = null)
     {
         $players = [$playerSign,  new Sign($playerSign->getOppositeSign())];
         $this->lastMove = $players[array_rand($players)];
-        $this->boardState = $boardState;
+        $this->boardState = $boardState ?? new BoardState();
         $this->playerSign = $playerSign;
         $this->winnerState = $winnerState ?? new WinnerState();
     }
@@ -57,30 +54,18 @@ class Board implements \Serializable
      */
     public function makeMove(Move $move, Sign $sign): void
     {
-        if ($this->isGameOver()) {
-            throw new GameOver();
-        }
-
-        if (Sign::EMPTY === $sign->getValue()) {
-            throw new IncorrectMoveSign();
-        }
-
-        if (!$this->boardState->isEmptySpot($move->getRow(), $move->getColumn())) {
-            throw new CellIsOccupied();
-        }
-
         if ($this->getLastMove()->equal($sign)) {
             throw new SecondMove();
         }
 
-        $state = $this->boardState->getState();
+        if ($this->isGameOver()) {
+            throw new GameOver();
+        }
 
+        $this->boardState->makeMove($move, $sign);
+        $this->winnerState->makeMove($move, $sign);
         $this->lastMove = $sign;
 
-        $state[$move->getRow()][$move->getColumn()] = $sign;
-        $this->boardState = new BoardState($state);
-
-        $this->winnerState->makeMove($move, $sign);
         $this->winner = $this->winnerState->hasWinner() ? $sign : null;
     }
 
@@ -127,6 +112,7 @@ class Board implements \Serializable
     public function __clone()
     {
         $this->winnerState = clone $this->winnerState;
+        $this->boardState = clone $this->boardState;
     }
 
     /**
@@ -138,7 +124,7 @@ class Board implements \Serializable
             $this->winner ? $this->winner->getValue() : null,
             $this->playerSign->getValue(),
             $this->lastMove->getValue(),
-            $this->boardState->getState(),
+            serialize($this->boardState),
             serialize($this->winnerState),
         ]);
     }
@@ -161,7 +147,7 @@ class Board implements \Serializable
         $this->winner = $winner ? new Sign($winner) : $winner;
         $this->playerSign = new Sign($playerSign);
         $this->lastMove = new Sign($lastMove);
-        $this->boardState = new BoardState($boardState);
+        $this->boardState = unserialize($boardState);
         $this->winnerState = unserialize($winnerState);
     }
 }

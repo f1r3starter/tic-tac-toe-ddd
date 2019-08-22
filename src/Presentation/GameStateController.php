@@ -4,6 +4,7 @@ namespace App\Presentation;
 
 use App\Application\GameModifier;
 use App\Domain\Entity\Board;
+use App\Domain\Exception\IncorrectSign;
 use App\Presentation\DTO\GameState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,6 @@ class GameStateController
      */
     public function getState(): JsonResponse
     {
-        var_dump($this->gameModifier->getState());
         return $this->prepareResponse(
             $this->gameModifier->getState()
         );
@@ -42,6 +42,8 @@ class GameStateController
      */
     public function makeMove(Request $request): Response
     {
+        $this->transformRequest($request);
+
         return $this->prepareResponse(
             $this->gameModifier->makeMove($request->get('row'), $request->get('column'))
         );
@@ -54,6 +56,8 @@ class GameStateController
      */
     public function chooseSign(Request $request): JsonResponse
     {
+        $this->transformRequest($request);
+
         return $this->prepareResponse(
             $this->gameModifier->chooseSign($request->get('sign'))
         );
@@ -69,5 +73,19 @@ class GameStateController
         return new JsonResponse(
             new GameState($board)
         );
+    }
+
+    /**
+     * @param Request $request
+     */
+    protected function transformRequest(Request $request): void
+    {
+        $data = \json_decode($request->getContent(), true);
+
+        if (\json_last_error() !== JSON_ERROR_NONE || null === $data) {
+            throw new IncorrectSign();
+        }
+
+        $request->request->replace($data);
     }
 }
