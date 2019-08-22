@@ -15,6 +15,8 @@ Backend contain 4 paths:
 
 Frontend is using react+redux, logic is implemented via redux sagas
 
-TBD: write more tests
+TBD: 
+- write more tests
+- use symfony validators for incoming data
 
 Have fun!
