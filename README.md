@@ -1,4 +1,5 @@
-#TIC-TAC-TOE in DDD style
+TIC-TAC-TOE in DDD style
+------------
 
 Projects backend is located in './src' path, frontend in './front' path
 To run project, you need to have docker and docker-compose installed on your working station.
