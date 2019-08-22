@@ -136,6 +136,39 @@ class GameModifierTest extends TestCase
         );
     }
 
+    public function testChooseSign(): void
+    {
+        $playerSign = new Sign(Sign::CROSS);
+        $botSign = new Sign($playerSign->getOppositeSign());
+
+        $botStrategy = $this->getBotStrategyMock();
+        $gameStorage = $this->getGameStorageMock();
+        $gameStorage
+            ->expects($this->once())
+            ->method('restartGame');
+
+        $board = new Board(
+            $playerSign
+        );
+
+        if ($board->getLastMove()->equal($playerSign)) {
+            $botStrategy
+                ->expects($this->once())
+                ->method('makeMove')
+                ->will($this->returnCallback(function () use ($board, $botSign) {
+                    $board->makeMove(new Move(2, 0), $botSign);
+                }));
+        }
+
+        $gameStorage
+            ->expects($this->once())
+            ->method('saveGameState')
+            ->with($board);
+
+        $gameModifier = new GameModifier($gameStorage, $botStrategy);
+        $gameModifier->chooseSign($playerSign->getValue());
+    }
+
     /**
      * @return MockObject|GameStorage
      */

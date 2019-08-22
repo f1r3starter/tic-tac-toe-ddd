@@ -1,3 +1,12 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+start_game:
+    path:       /game
+    controller: App\Presentation\GameStateController::chooseSign
+    methods:    POST
+make_move:
+    path:       /game
+    controller: App\Presentation\GameStateController::makeMove
+    methods:    PUT
+game_state:
+    path:       /game
+    controller: App\Presentation\GameStateController::getState
+    methods:    [GET, OPTIONS]

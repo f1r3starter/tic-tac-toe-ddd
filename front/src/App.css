@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css?family=Mali&display=swap");
+* {
+  box-sizing: border-box;
+}
+*:focus {
+  outline: unset;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Mali", cursive;
+  color: #333;
+  background: rgba(211, 204, 227, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grids {
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+  height: 300px;
+}
+.grids > * {
+  width: 100px;
+  height: 100px;
+  border: 3px solid #555;
+  font-size: 32px;
+  text-align: center;
+  line-height: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.grids > *:hover {
+  background-color: #d3cce3;
+}
+.grids > *:nth-child(-n + 3) {
+  border-top: unset;
+}
+.grids > *:nth-last-child(-n + 3) {
+  border-bottom: unset;
+}
+.grids > *:nth-child(3n) {
+  border-right: unset;
+}
+.grids > *:nth-child(3n + 1) {
+  border-left: unset;
+}
+
+.info {
+  text-align: center;
+}
+.info button {
+  padding: 8px 16px;
+  border: 1.5px solid #555;
+  border-radius: 100px;
+  background-color: transparent;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.info button:hover {
+  background-color: #555;
+  color: white;
+}
