@@ -8,7 +8,7 @@ To run project, you need to have docker and docker-compose installed on your wor
 
 After that you can find game running on the http://localhost:8008 address.
 
-Backend contain 4 paths:
+Backend contains 4 paths:
 - Presentation is responsible for interaction with client
 - Application is responsible for interaction with infrastructure and domain
 - Infrastructure contains all infrastructure dependencies, for now we save game state into session, but with this code architecture it can be easily be substituted with smth like Redis
