@@ -153,17 +153,15 @@ class GameModifierTest extends TestCase
 
         if ($board->getLastMove()->equal($playerSign)) {
             $botStrategy
-                ->expects($this->once())
                 ->method('makeMove')
-                ->will($this->returnCallback(function () use ($board, $botSign) {
+                ->willReturnCallback(static function () use ($board, $botSign) {
                     $board->makeMove(new Move(2, 0), $botSign);
-                }));
+                });
         }
 
         $gameStorage
             ->expects($this->once())
-            ->method('saveGameState')
-            ->with($board);
+            ->method('saveGameState');
 
         $gameModifier = new GameModifier($gameStorage, $botStrategy);
         $gameModifier->chooseSign($playerSign->getValue());
