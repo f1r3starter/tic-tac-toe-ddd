@@ -66,6 +66,6 @@ class Move
      */
     private function outOfRange(int $cell): bool
     {
-        return $cell < self::MIN_VALUE && $cell > self::MAX_VALUE;
+        return $cell < self::MIN_VALUE || $cell > self::MAX_VALUE;
     }
 }
