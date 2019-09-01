@@ -142,12 +142,12 @@ class Board implements \Serializable
             $lastMove,
             $boardState,
             $winnerState,
-            ) = unserialize($serialized);
+            ) = unserialize($serialized, ['allowed_classes' => self::class]);
 
         $this->winner = $winner ? new Sign($winner) : $winner;
         $this->playerSign = new Sign($playerSign);
         $this->lastMove = new Sign($lastMove);
-        $this->boardState = unserialize($boardState);
-        $this->winnerState = unserialize($winnerState);
+        $this->boardState = unserialize($boardState, ['allowed_classes' => BoardState::class]);
+        $this->winnerState = unserialize($winnerState, ['allowed_classes' => WinnerState::class]);
     }
 }

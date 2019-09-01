@@ -17,7 +17,7 @@ class GameStateTest extends TestCase
 
         $gameState = new GameState($board);
         $serializedState = $gameState->jsonSerialize();
-        
+
         $this->assertEquals(
             [
                 'boardState' => $board->getBoardState()->getState(),
