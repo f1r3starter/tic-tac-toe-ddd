@@ -20,17 +20,17 @@ class WinnerState implements \Serializable
     /**
      * @var array
      */
-    private $rows = [];
+    private $rows;
 
     /**
      * @var array
      */
-    private $diagonal = [];
+    private $diagonal;
 
     /**
      * @var array
      */
-    private $oppositeDiagonal = [];
+    private $oppositeDiagonal;
 
     /**
      * @var bool
