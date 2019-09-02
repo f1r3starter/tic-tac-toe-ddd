@@ -27,7 +27,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     /**
      * @param ExceptionEvent $event
      */
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
         $response = new JsonResponse([
@@ -39,7 +39,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             KernelEvents::EXCEPTION => 'onKernelException'
