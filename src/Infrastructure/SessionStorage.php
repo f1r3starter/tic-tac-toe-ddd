@@ -28,7 +28,7 @@ class SessionStorage implements GameStorage
      */
     public function restoreGameState(): Board
     {
-        return unserialize($this->session->get(self::STORAGE_KEY));
+        return unserialize($this->session->get(self::STORAGE_KEY), ['allowed_classes' => Board::class]);
     }
 
     /**

@@ -49,9 +49,9 @@ class MinMaxBotStrategy implements BotStrategy
 
         if ($board->getLastMove()->equal($this->playerSign)) {
             return $this->maximize($board, $currentMoveNum);
-        } else {
-            return $this->minimize($board, $currentMoveNum);
         }
+
+        return $this->minimize($board, $currentMoveNum);
     }
 
     /**
@@ -127,7 +127,7 @@ class MinMaxBotStrategy implements BotStrategy
     {
         $winner = $board->getWinner();
 
-        if ($board->isGameOver() && null !== $winner) {
+        if (null !== $winner && $board->isGameOver()) {
             return $winner->equal($this->botSign) ? self::WIN_SCORE : self::LOSE_SCORE;
         }
 

@@ -82,7 +82,7 @@ class GameStateController
     {
         $data = \json_decode($request->getContent(), true);
 
-        if (\json_last_error() !== JSON_ERROR_NONE || null === $data) {
+        if (null === $data || \json_last_error() !== JSON_ERROR_NONE) {
             throw new IncorrectSign();
         }
 

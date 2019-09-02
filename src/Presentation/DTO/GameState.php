@@ -9,7 +9,7 @@ class GameState implements \JsonSerializable
     /**
      * @var array
      */
-    private $boardState = [];
+    private $boardState;
 
     /**
      * @var string
