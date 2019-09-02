@@ -15,7 +15,7 @@ class WinnerState implements \Serializable
     /**
      * @var array
      */
-    private $columns = [];
+    private $columns;
 
     /**
      * @var array
@@ -151,11 +151,11 @@ class WinnerState implements \Serializable
      */
     public function unserialize($serialized): void
     {
-        list(
+        [
             $this->columns,
             $this->rows,
             $this->diagonal,
             $this->oppositeDiagonal,
-            ) = unserialize($serialized);
+        ] = unserialize($serialized, ['allowed_classes' => self::class]);
     }
 }

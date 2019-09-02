@@ -12,7 +12,7 @@ class Board implements \Serializable
     /**
      * @var Sign|null
      */
-    private $winner = null;
+    private $winner;
 
     /**
      * @var Sign
@@ -41,7 +41,7 @@ class Board implements \Serializable
      */
     public function __construct(Sign $playerSign, ?BoardState $boardState = null, ?WinnerState $winnerState = null)
     {
-        $players = [$playerSign,  new Sign($playerSign->getOppositeSign())];
+        $players = [$playerSign, new Sign($playerSign->getOppositeSign())];
         $this->lastMove = $players[array_rand($players)];
         $this->boardState = $boardState ?? new BoardState();
         $this->playerSign = $playerSign;
@@ -136,13 +136,13 @@ class Board implements \Serializable
      */
     public function unserialize($serialized): void
     {
-        list(
+        [
             $winner,
             $playerSign,
             $lastMove,
             $boardState,
             $winnerState,
-            ) = unserialize($serialized, ['allowed_classes' => self::class]);
+        ] = unserialize($serialized, ['allowed_classes' => self::class]);
 
         $this->winner = $winner ? new Sign($winner) : $winner;
         $this->playerSign = new Sign($playerSign);

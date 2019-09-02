@@ -107,10 +107,10 @@ class BoardState implements \Serializable
      */
     public function unserialize($serialized): void
     {
-        list(
+        [
             $this->state,
             $this->availableMoves,
-        ) = unserialize($serialized);
+        ] = unserialize($serialized, ['allowed_classes' => self::class]);
 
         $this->emptySign = new Sign(Sign::EMPTY);
     }
@@ -133,7 +133,7 @@ class BoardState implements \Serializable
     {
         $defaultState = array_map(function () {
             return clone $this->emptySign;
-        },  array_fill(0, pow(self::SIDE_LENGTH, self::SIDES), null));
+        },  array_fill(0, self::SIDE_LENGTH ** self::SIDES, null));
 
         return array_chunk($defaultState, self::SIDE_LENGTH);
     }
