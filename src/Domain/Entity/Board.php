@@ -106,7 +106,7 @@ class Board implements \Serializable
      */
     public function isGameOver(): bool
     {
-        return empty($this->getBoardState()->getAvailableMoves()) || null !== $this->winner;
+        return null !== $this->winner || empty($this->getBoardState()->getAvailableMoves());
     }
 
     public function __clone()
@@ -142,12 +142,12 @@ class Board implements \Serializable
             $lastMove,
             $boardState,
             $winnerState,
-        ] = unserialize($serialized, ['allowed_classes' => self::class]);
+        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
 
         $this->winner = $winner ? new Sign($winner) : $winner;
         $this->playerSign = new Sign($playerSign);
         $this->lastMove = new Sign($lastMove);
-        $this->boardState = unserialize($boardState, ['allowed_classes' => BoardState::class]);
-        $this->winnerState = unserialize($winnerState, ['allowed_classes' => WinnerState::class]);
+        $this->boardState = unserialize($boardState, ['allowed_classes' => [BoardState::class]]);
+        $this->winnerState = unserialize($winnerState, ['allowed_classes' => [WinnerState::class]]);
     }
 }

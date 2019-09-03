@@ -78,7 +78,7 @@ class BoardState implements \Serializable
 
         unset($this->availableMoves[$move->getRow()][$move->getColumn()]);
 
-        $this->state[$move->getRow()][$move->getColumn()] =  $sign;
+        $this->state[$move->getRow()][$move->getColumn()] = $sign;
     }
 
     /**
@@ -86,7 +86,7 @@ class BoardState implements \Serializable
      */
     public function getAvailableMoves(): array
     {
-        return array_merge(...$this->availableMoves);
+        return empty($this->availableMoves) ? [] : array_merge(...$this->availableMoves);
     }
 
     /**
@@ -110,7 +110,7 @@ class BoardState implements \Serializable
         [
             $this->state,
             $this->availableMoves,
-        ] = unserialize($serialized, ['allowed_classes' => self::class]);
+        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
 
         $this->emptySign = new Sign(Sign::EMPTY);
     }

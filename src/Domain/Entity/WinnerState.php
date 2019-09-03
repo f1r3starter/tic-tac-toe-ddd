@@ -156,6 +156,6 @@ class WinnerState implements \Serializable
             $this->rows,
             $this->diagonal,
             $this->oppositeDiagonal,
-        ] = unserialize($serialized, ['allowed_classes' => self::class]);
+        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
     }
 }
