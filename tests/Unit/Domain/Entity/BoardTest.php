@@ -56,9 +56,8 @@ class BoardTest extends TestCase
         $sign = new Sign(Sign::ZERO);
 
         $board = new Board($sign);
-        $newBoard = new Board($sign);
-        $newBoard->unserialize($board->serialize());
+        $serializedBoard = unserialize(serialize($board));
 
-        $this->assertEquals($board, $newBoard);
+        $this->assertInstanceOf(Board::class, $serializedBoard);
     }
 }
