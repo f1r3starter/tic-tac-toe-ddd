@@ -32,7 +32,7 @@ class SignTest extends TestCase
     public function testIncorrectValue(): void
     {
         $this->expectException(IncorrectSign::class);
-        new Sign('blah');
+        new Sign('incorrect sign');
     }
 
     public function testEqual(): void
