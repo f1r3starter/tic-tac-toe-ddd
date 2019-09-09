@@ -69,7 +69,7 @@ class GameModifierTest extends TestCase
         $botStrategy = $this->getBotStrategyMock();
 
         $gameModifier = new GameModifier($gameStorage, $botStrategy);
-        $gameModifier->getState();
+        $gameModifier->makeMove(Move::MIN_VALUE, Move::MIN_VALUE);
     }
 
     public function testMakeMoveSuccess(): void
