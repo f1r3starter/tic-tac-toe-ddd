@@ -21,13 +21,20 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('get')
-            ->willReturn(serialize($board))
-        ;
+            ->willReturn(serialize($board));
 
         $sessionStorage = new SessionStorage($sessionMock);
         $restoredBoard = $sessionStorage->restoreGameState();
 
         $this->assertInstanceOf(Board::class, $restoredBoard);
+    }
+
+    /**
+     * @return MockObject|SessionInterface
+     */
+    private function getSessionMock(): MockObject
+    {
+        return $this->createMock(SessionInterface::class);
     }
 
     public function testGameStarted(): void
@@ -38,8 +45,7 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('has')
-            ->willReturn($gameStarted)
-        ;
+            ->willReturn($gameStarted);
 
         $sessionStorage = new SessionStorage($sessionMock);
 
@@ -59,8 +65,7 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('set')
-            ->with('board', serialize($board))
-        ;
+            ->with('board', serialize($board));
 
         $sessionStorage = new SessionStorage($sessionMock);
         $sessionStorage->saveGameState($board);
@@ -72,18 +77,9 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('remove')
-            ->with('board')
-        ;
+            ->with('board');
 
         $sessionStorage = new SessionStorage($sessionMock);
         $sessionStorage->restartGame();
-    }
-
-    /**
-     * @return MockObject|SessionInterface
-     */
-    private function getSessionMock(): MockObject
-    {
-        return $this->createMock(SessionInterface::class);
     }
 }

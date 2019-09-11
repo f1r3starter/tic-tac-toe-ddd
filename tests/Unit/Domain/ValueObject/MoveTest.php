@@ -4,6 +4,7 @@ namespace App\Tests\Unit\Domain\ValueObject;
 
 use App\Domain\Exception\MoveIsOutOfRange;
 use App\Domain\ValueObject\Move;
+use Generator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 class MoveTest extends TestCase
@@ -39,9 +40,9 @@ class MoveTest extends TestCase
     }
 
     /**
-     * @return \Generator
+     * @return Generator
      */
-    public function rangeDataProvider(): \Generator
+    public function rangeDataProvider(): Generator
     {
         yield ['row' => Move::MIN_VALUE - 1, 'column' => Move::MIN_VALUE];
         yield ['row' => Move::MIN_VALUE, 'column' => Move::MIN_VALUE - 1];

@@ -24,7 +24,7 @@ class GameStateTest extends TestCase
                 'nextMove' => $board->getLastMove()->getOppositeSign(),
                 'isOver' => $board->isGameOver(),
                 'playerSign' => $board->getPlayerSign()->getValue(),
-                'winner' =>  $board->getWinner(),
+                'winner' => $board->getWinner(),
             ],
             $serializedState);
     }

@@ -30,6 +30,22 @@ class GameModifierTest extends TestCase
         $gameModifier->getState();
     }
 
+    /**
+     * @return MockObject|GameStorage
+     */
+    private function getGameStorageMock(): MockObject
+    {
+        return $this->createMock(GameStorage::class);
+    }
+
+    /**
+     * @return MockObject|BotStrategy
+     */
+    private function getBotStrategyMock(): MockObject
+    {
+        return $this->createMock(BotStrategy::class);
+    }
+
     public function testGetStateSuccess(): void
     {
         $board = new Board(
@@ -165,21 +181,5 @@ class GameModifierTest extends TestCase
 
         $gameModifier = new GameModifier($gameStorage, $botStrategy);
         $gameModifier->chooseSign($playerSign->getValue());
-    }
-
-    /**
-     * @return MockObject|GameStorage
-     */
-    private function getGameStorageMock(): MockObject
-    {
-        return $this->createMock(GameStorage::class);
-    }
-
-    /**
-     * @return MockObject|BotStrategy
-     */
-    private function getBotStrategyMock(): MockObject
-    {
-        return $this->createMock(BotStrategy::class);
     }
 }
