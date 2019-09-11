@@ -3,13 +3,14 @@
 namespace App\Domain\ValueObject;
 
 use App\Domain\Exception\IncorrectSign;
+use JsonSerializable;
 
-class Sign implements \JsonSerializable
+class Sign implements JsonSerializable
 {
     public const CROSS = 'X';
-    public const ZERO  = 'O';
-    public const EMPTY  = '';
-    private const AVAILABLE_VALUES  = [self::CROSS, self::ZERO, self::EMPTY];
+    public const ZERO = 'O';
+    public const EMPTY = '';
+    private const AVAILABLE_VALUES = [self::CROSS, self::ZERO, self::EMPTY];
 
     /**
      * @var string
@@ -26,7 +27,7 @@ class Sign implements \JsonSerializable
      */
     public function __construct(?string $sign)
     {
-        if (!in_array($sign,  self::AVAILABLE_VALUES,  true)) {
+        if (!in_array($sign, self::AVAILABLE_VALUES, true)) {
             throw new IncorrectSign();
         }
 
@@ -37,14 +38,6 @@ class Sign implements \JsonSerializable
         } else {
             $this->oppositeSign = self::CROSS === $sign ? self::ZERO : self::CROSS;
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->sign;
     }
 
     /**
@@ -63,6 +56,14 @@ class Sign implements \JsonSerializable
     public function equal(Sign $sign): bool
     {
         return $sign->getValue() === $this->getValue();
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->sign;
     }
 
     /**

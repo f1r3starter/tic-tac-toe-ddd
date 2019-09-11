@@ -24,6 +24,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $this->logger = $logger;
     }
 
+    public static function getSubscribedEvents(): array
+    {
+        return array(
+            KernelEvents::EXCEPTION => 'onKernelException'
+        );
+    }
+
     /**
      * @param ExceptionEvent $event
      */
@@ -37,12 +44,5 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $this->logger->error($exception);
         $event->setResponse($response);
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return array(
-            KernelEvents::EXCEPTION => 'onKernelException'
-        );
     }
 }

@@ -55,7 +55,7 @@ class GameModifier
         }
 
         $move = new Move($row, $column);
-        $board  = $this->gameStorage->restoreGameState();
+        $board = $this->gameStorage->restoreGameState();
         $board->makeMove($move, $board->getPlayerSign());
         $botSign = new Sign($board->getPlayerSign()->getOppositeSign());
         $this->botStrategy->makeMove($board, $botSign);

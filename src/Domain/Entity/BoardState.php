@@ -7,8 +7,9 @@ use App\Domain\Exception\IncorrectBoardState;
 use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
+use Serializable;
 
-class BoardState implements \Serializable
+class BoardState implements Serializable
 {
     public const SIDE_LENGTH = 3;
     public const SIDES = 2;
@@ -33,7 +34,7 @@ class BoardState implements \Serializable
      */
     public function __construct(?array $state = null)
     {
-        $this->emptySign =  new Sign(Sign::EMPTY);
+        $this->emptySign = new Sign(Sign::EMPTY);
         $state = $state ?? $this->getDefaultState();
 
         if (!$this->validateBoard($state)) {
@@ -52,6 +53,32 @@ class BoardState implements \Serializable
         });
 
         $this->availableMoves = $availableMoves;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultState(): array
+    {
+        $defaultState = array_map(function () {
+            return clone $this->emptySign;
+        }, array_fill(0, self::SIDE_LENGTH ** self::SIDES, null));
+
+        return array_chunk($defaultState, self::SIDE_LENGTH);
+    }
+
+    /**
+     * @param array $state
+     *
+     * @return bool
+     */
+    private function validateBoard(array $state): bool
+    {
+        $columnsLengths = array_map('count', $state);
+
+        return count($state) === self::SIDE_LENGTH
+            && count(array_unique($columnsLengths))
+            && end($columnsLengths) === self::SIDE_LENGTH; // This is what happened when you hate to use loops :)
     }
 
     /**
@@ -79,6 +106,17 @@ class BoardState implements \Serializable
         unset($this->availableMoves[$move->getRow()][$move->getColumn()]);
 
         $this->state[$move->getRow()][$move->getColumn()] = $sign;
+    }
+
+    /**
+     * @param int $row
+     * @param int $column
+     *
+     * @return bool
+     */
+    private function isEmptySpot(int $row, int $column): bool
+    {
+        return $this->state[$row][$column]->equal($this->emptySign);
     }
 
     /**
@@ -113,42 +151,5 @@ class BoardState implements \Serializable
         ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
 
         $this->emptySign = new Sign(Sign::EMPTY);
-    }
-
-    /**
-     * @param int $row
-     * @param int $column
-     *
-     * @return bool
-     */
-    private function isEmptySpot(int $row, int $column): bool
-    {
-        return $this->state[$row][$column]->equal($this->emptySign);
-    }
-
-    /**
-     * @return array
-     */
-    private function getDefaultState(): array
-    {
-        $defaultState = array_map(function () {
-            return clone $this->emptySign;
-        },  array_fill(0, self::SIDE_LENGTH ** self::SIDES, null));
-
-        return array_chunk($defaultState, self::SIDE_LENGTH);
-    }
-
-    /**
-     * @param array $state
-     *
-     * @return bool
-     */
-    private function validateBoard(array $state): bool
-    {
-        $columnsLengths = array_map('count', $state);
-
-        return count($state) === self::SIDE_LENGTH
-            && count(array_unique($columnsLengths))
-            && end($columnsLengths) === self::SIDE_LENGTH; // This is what happened when you hate to use loops :)
     }
 }

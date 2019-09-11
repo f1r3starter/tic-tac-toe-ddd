@@ -5,8 +5,11 @@ namespace App\Domain\Entity;
 use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
+use Serializable;
+use function array_fill;
+use function in_array;
 
-class WinnerState implements \Serializable
+class WinnerState implements Serializable
 {
     private const CROSS_INDEX = 0;
     private const ZERO_INDEX = 1;
@@ -48,6 +51,14 @@ class WinnerState implements \Serializable
     }
 
     /**
+     * @return array
+     */
+    private function initSide(): array
+    {
+        return array_fill(0, BoardState::SIDE_LENGTH, self::INIT_VALUE);
+    }
+
+    /**
      * @param Move $move
      * @param Sign $sign
      */
@@ -66,23 +77,7 @@ class WinnerState implements \Serializable
             $this->updateOppositeDiagonal($move->getColumn(), $move->getRow(), $index),
         ];
 
-        $this->hasWinner = \in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasWinner(): bool
-    {
-        return $this->hasWinner;
-    }
-
-    /**
-     * @return array
-     */
-    private function initSide(): array
-    {
-        return \array_fill(0, BoardState::SIDE_LENGTH, self::INIT_VALUE);
+        $this->hasWinner = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
     }
 
     /**
@@ -129,6 +124,14 @@ class WinnerState implements \Serializable
     private function updateOppositeDiagonal(int $columnIndex, int $rowIndex, int $signIndex): int
     {
         return $columnIndex === BoardState::SIDE_LENGTH - $rowIndex - 1 ? ++$this->oppositeDiagonal[$signIndex] : $this->oppositeDiagonal[$signIndex];
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasWinner(): bool
+    {
+        return $this->hasWinner;
     }
 
     /**

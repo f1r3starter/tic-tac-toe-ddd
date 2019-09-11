@@ -56,6 +56,22 @@ class MinMaxBotStrategy implements BotStrategy
 
     /**
      * @param Board $board
+     *
+     * @return int
+     */
+    private function evaluate(Board $board): int
+    {
+        $winner = $board->getWinner();
+
+        if (null !== $winner && $board->isGameOver()) {
+            return $winner->equal($this->botSign) ? self::WIN_SCORE : self::LOSE_SCORE;
+        }
+
+        return self::DRAW_SCORE;
+    }
+
+    /**
+     * @param Board $board
      * @param int $currentMoveNum
      *
      * @return int
@@ -116,21 +132,5 @@ class MinMaxBotStrategy implements BotStrategy
         $board->makeMove($bestMove, $this->playerSign);
 
         return $bestScore;
-    }
-
-    /**
-     * @param Board $board
-     *
-     * @return int
-     */
-    private function evaluate(Board $board): int
-    {
-        $winner = $board->getWinner();
-
-        if (null !== $winner && $board->isGameOver()) {
-            return $winner->equal($this->botSign) ? self::WIN_SCORE : self::LOSE_SCORE;
-        }
-
-        return self::DRAW_SCORE;
     }
 }

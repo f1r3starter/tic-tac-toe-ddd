@@ -6,9 +6,11 @@ use App\Application\GameModifier;
 use App\Domain\Entity\Board;
 use App\Domain\Exception\IncorrectSign;
 use App\Presentation\DTO\GameState;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function json_decode;
+use function json_last_error;
 
 class GameStateController
 {
@@ -36,6 +38,18 @@ class GameStateController
     }
 
     /**
+     * @param Board $board
+     *
+     * @return JsonResponse
+     */
+    private function prepareResponse(Board $board): JsonResponse
+    {
+        return new JsonResponse(
+            new GameState($board)
+        );
+    }
+
+    /**
      * @param Request $request
      *
      * @return JsonResponse
@@ -51,6 +65,20 @@ class GameStateController
 
     /**
      * @param Request $request
+     */
+    protected function transformRequest(Request $request): void
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (null === $data || json_last_error() !== JSON_ERROR_NONE) {
+            throw new IncorrectSign();
+        }
+
+        $request->request->replace($data);
+    }
+
+    /**
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -61,31 +89,5 @@ class GameStateController
         return $this->prepareResponse(
             $this->gameModifier->chooseSign($request->get('sign'))
         );
-    }
-
-    /**
-     * @param Board $board
-     *
-     * @return JsonResponse
-     */
-    private function prepareResponse(Board $board): JsonResponse
-    {
-        return new JsonResponse(
-            new GameState($board)
-        );
-    }
-
-    /**
-     * @param Request $request
-     */
-    protected function transformRequest(Request $request): void
-    {
-        $data = \json_decode($request->getContent(), true);
-
-        if (null === $data || \json_last_error() !== JSON_ERROR_NONE) {
-            throw new IncorrectSign();
-        }
-
-        $request->request->replace($data);
     }
 }

@@ -6,8 +6,9 @@ use App\Domain\Exception\GameOver;
 use App\Domain\Exception\SecondMove;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
+use Serializable;
 
-class Board implements \Serializable
+class Board implements Serializable
 {
     /**
      * @var Sign|null
@@ -70,6 +71,22 @@ class Board implements \Serializable
     }
 
     /**
+     * @return Sign
+     */
+    public function getLastMove(): Sign
+    {
+        return $this->lastMove;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGameOver(): bool
+    {
+        return null !== $this->winner || empty($this->getBoardState()->getAvailableMoves());
+    }
+
+    /**
      * @return BoardState
      */
     public function getBoardState(): BoardState
@@ -88,25 +105,9 @@ class Board implements \Serializable
     /**
      * @return Sign
      */
-    public function getLastMove(): Sign
-    {
-        return $this->lastMove;
-    }
-
-    /**
-     * @return Sign
-     */
     public function getPlayerSign(): Sign
     {
         return $this->playerSign;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGameOver(): bool
-    {
-        return null !== $this->winner || empty($this->getBoardState()->getAvailableMoves());
     }
 
     public function __clone()

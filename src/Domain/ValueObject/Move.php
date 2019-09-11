@@ -34,19 +34,13 @@ class Move
     }
 
     /**
-     * @return int
+     * @param int $cell
+     *
+     * @return bool
      */
-    public function getColumn(): int
+    private function outOfRange(int $cell): bool
     {
-        return $this->column;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRow(): int
-    {
-        return $this->row;
+        return $cell < self::MIN_VALUE || $cell > self::MAX_VALUE;
     }
 
     /**
@@ -60,12 +54,18 @@ class Move
     }
 
     /**
-     * @param int $cell
-     *
-     * @return bool
+     * @return int
      */
-    private function outOfRange(int $cell): bool
+    public function getRow(): int
     {
-        return $cell < self::MIN_VALUE || $cell > self::MAX_VALUE;
+        return $this->row;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColumn(): int
+    {
+        return $this->column;
     }
 }

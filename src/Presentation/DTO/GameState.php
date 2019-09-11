@@ -3,8 +3,9 @@
 namespace App\Presentation\DTO;
 
 use App\Domain\Entity\Board;
+use JsonSerializable;
 
-class GameState implements \JsonSerializable
+class GameState implements JsonSerializable
 {
     /**
      * @var array
@@ -53,7 +54,7 @@ class GameState implements \JsonSerializable
             'nextMove' => $this->nextMove,
             'isOver' => $this->isOver,
             'playerSign' => $this->playerSign,
-            'winner' =>  $this->winner,
+            'winner' => $this->winner,
         ];
     }
 }
