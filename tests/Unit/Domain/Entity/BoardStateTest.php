@@ -8,7 +8,7 @@ use App\Domain\Exception\IncorrectBoardState;
 use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class BoardStateTest extends TestCase
 {

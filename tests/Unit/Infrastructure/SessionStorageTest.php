@@ -6,7 +6,7 @@ use App\Domain\Entity\Board;
 use App\Domain\ValueObject\Sign;
 use App\Infrastructure\SessionStorage;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionStorageTest extends TestCase

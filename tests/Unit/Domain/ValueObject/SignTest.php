@@ -4,7 +4,7 @@ namespace App\Tests\Unit\Domain\ValueObject;
 
 use App\Domain\Exception\IncorrectSign;
 use App\Domain\ValueObject\Sign;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class SignTest extends TestCase
 {

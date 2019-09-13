@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Domain\ValueObject;
 use App\Domain\Exception\MoveIsOutOfRange;
 use App\Domain\ValueObject\Move;
 use Generator;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class MoveTest extends TestCase
 {

@@ -10,7 +10,7 @@ use App\Domain\Strategy\BotStrategy;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class GameModifierTest extends TestCase
 {

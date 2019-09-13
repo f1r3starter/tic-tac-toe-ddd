@@ -5,7 +5,7 @@ namespace App\Tests\Unit\Domain\Strategy;
 use App\Domain\Entity\Board;
 use App\Domain\Strategy\MinMaxBotStrategy;
 use App\Domain\ValueObject\Sign;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class MinMaxBotStrategyTest extends TestCase
 {
