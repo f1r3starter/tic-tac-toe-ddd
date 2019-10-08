@@ -12,7 +12,7 @@ class GameStateTest extends TestCase
     public function testSerialize(): void
     {
         $board = new Board(
-            new Sign(Sign::ZERO)
+            new Sign(Sign::CROSS)
         );
 
         $gameState = new GameState($board);
