@@ -7,9 +7,8 @@ use App\Domain\Exception\IncorrectBoardState;
 use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
-use Serializable;
 
-class BoardState implements Serializable
+class BoardState
 {
     public const SIDE_LENGTH = 3;
     public const SIDES = 2;
@@ -125,31 +124,5 @@ class BoardState implements Serializable
     public function getAvailableMoves(): array
     {
         return empty($this->availableMoves) ? [] : array_merge(...$this->availableMoves);
-    }
-
-    /**
-     * @return string
-     */
-    public function serialize(): string
-    {
-        return serialize([
-            $this->state,
-            $this->availableMoves,
-        ]);
-    }
-
-    /**
-     * @param $serialized
-     *
-     * @return void
-     */
-    public function unserialize($serialized): void
-    {
-        [
-            $this->state,
-            $this->availableMoves,
-        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
-
-        $this->emptySign = new Sign(Sign::EMPTY);
     }
 }

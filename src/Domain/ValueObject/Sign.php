@@ -3,9 +3,8 @@
 namespace App\Domain\ValueObject;
 
 use App\Domain\Exception\IncorrectSign;
-use JsonSerializable;
 
-class Sign implements JsonSerializable
+class Sign
 {
     public const CROSS = 'X';
     public const ZERO = 'O';
@@ -18,7 +17,7 @@ class Sign implements JsonSerializable
     private $sign;
 
     /**
-     * @var self
+     * @var string
      */
     private $oppositeSign;
 
@@ -64,13 +63,5 @@ class Sign implements JsonSerializable
     public function getValue(): string
     {
         return $this->sign;
-    }
-
-    /**
-     * @return string
-     */
-    public function jsonSerialize(): string
-    {
-        return $this->getValue();
     }
 }

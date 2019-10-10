@@ -16,7 +16,6 @@ class GameStateTest extends TestCase
         );
 
         $gameState = new GameState($board);
-        $serializedState = $gameState->jsonSerialize();
 
         $this->assertEquals(
             [
@@ -26,6 +25,6 @@ class GameStateTest extends TestCase
                 'playerSign' => $board->getPlayerSign()->getValue(),
                 'winner' => $board->getWinner(),
             ],
-            $serializedState);
+            $gameState);
     }
 }

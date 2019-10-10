@@ -9,6 +9,7 @@ use App\Presentation\DTO\GameState;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 use function json_decode;
 use function json_last_error;
 
@@ -20,11 +21,18 @@ class GameStateController
     private $gameModifier;
 
     /**
-     * @param GameModifier $gameModifier
+     * @var SerializerInterface
      */
-    public function __construct(GameModifier $gameModifier)
+    private $serializer;
+
+    /**
+     * @param GameModifier $gameModifier
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(GameModifier $gameModifier, SerializerInterface $serializer)
     {
         $this->gameModifier = $gameModifier;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -73,7 +81,7 @@ class GameStateController
     private function prepareResponse(Board $board): JsonResponse
     {
         return new JsonResponse(
-            new GameState($board)
+            $this->serializer->serialize(new GameState($board), 'json')
         );
     }
 

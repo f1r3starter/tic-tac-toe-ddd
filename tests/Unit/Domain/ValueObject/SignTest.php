@@ -44,11 +44,4 @@ class SignTest extends TestCase
         $this->assertTrue($sign->equal($signToEqual));
         $this->assertFalse($sign->equal($signNotToEqual));
     }
-
-    public function testSerialize(): void
-    {
-        $sign = new Sign(Sign::CROSS);
-
-        $this->assertEquals($sign->jsonSerialize(), Sign::CROSS);
-    }
 }

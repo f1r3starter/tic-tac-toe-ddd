@@ -5,11 +5,10 @@ namespace App\Domain\Entity;
 use App\Domain\Exception\IncorrectMoveSign;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
-use Serializable;
 use function array_fill;
 use function in_array;
 
-class WinnerState implements Serializable
+class WinnerState
 {
     private const CROSS_INDEX = 0;
     private const ZERO_INDEX = 1;
@@ -132,33 +131,5 @@ class WinnerState implements Serializable
     public function hasWinner(): bool
     {
         return $this->hasWinner;
-    }
-
-    /**
-     * @return string
-     */
-    public function serialize(): string
-    {
-        return serialize([
-            $this->columns,
-            $this->rows,
-            $this->diagonal,
-            $this->oppositeDiagonal,
-        ]);
-    }
-
-    /**
-     * @param $serialized
-     *
-     * @return void
-     */
-    public function unserialize($serialized): void
-    {
-        [
-            $this->columns,
-            $this->rows,
-            $this->diagonal,
-            $this->oppositeDiagonal,
-        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
     }
 }

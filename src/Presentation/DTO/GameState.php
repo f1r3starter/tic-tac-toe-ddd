@@ -3,9 +3,8 @@
 namespace App\Presentation\DTO;
 
 use App\Domain\Entity\Board;
-use JsonSerializable;
 
-class GameState implements JsonSerializable
+class GameState
 {
     /**
      * @var array
@@ -40,21 +39,47 @@ class GameState implements JsonSerializable
         $this->boardState = $board->getBoardState()->getState();
         $this->nextMove = $board->getLastMove()->getOppositeSign();
         $this->isOver = $board->isGameOver();
-        $this->winner = $board->getWinner();
+        $this->winner = $board->getWinner() ? $board->getWinner()->getValue() : null;
         $this->playerSign = $board->getPlayerSign()->getValue();
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize(): array
+    public function getBoardState(): array
     {
-        return [
-            'boardState' => $this->boardState,
-            'nextMove' => $this->nextMove,
-            'isOver' => $this->isOver,
-            'playerSign' => $this->playerSign,
-            'winner' => $this->winner,
-        ];
+        return $this->boardState;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNextMove(): string
+    {
+        return $this->nextMove;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOver(): bool
+    {
+        return $this->isOver;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlayerSign(): string
+    {
+        return $this->playerSign;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWinner(): ?string
+    {
+        return $this->winner;
     }
 }

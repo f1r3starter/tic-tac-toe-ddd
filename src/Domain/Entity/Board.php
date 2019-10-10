@@ -6,9 +6,8 @@ use App\Domain\Exception\GameOver;
 use App\Domain\Exception\SecondMove;
 use App\Domain\ValueObject\Move;
 use App\Domain\ValueObject\Sign;
-use Serializable;
 
-class Board implements Serializable
+class Board
 {
     /**
      * @var Sign|null
@@ -114,41 +113,5 @@ class Board implements Serializable
     {
         $this->winnerState = clone $this->winnerState;
         $this->boardState = clone $this->boardState;
-    }
-
-    /**
-     * @return string
-     */
-    public function serialize(): string
-    {
-        return serialize([
-            $this->winner ? $this->winner->getValue() : null,
-            $this->playerSign->getValue(),
-            $this->lastMove->getValue(),
-            serialize($this->boardState),
-            serialize($this->winnerState),
-        ]);
-    }
-
-    /**
-     * @param $serialized
-     *
-     * @return void
-     */
-    public function unserialize($serialized): void
-    {
-        [
-            $winner,
-            $playerSign,
-            $lastMove,
-            $boardState,
-            $winnerState,
-        ] = unserialize($serialized, ['allowed_classes' => [self::class]]);
-
-        $this->winner = $winner ? new Sign($winner) : $winner;
-        $this->playerSign = new Sign($playerSign);
-        $this->lastMove = new Sign($lastMove);
-        $this->boardState = unserialize($boardState, ['allowed_classes' => [BoardState::class]]);
-        $this->winnerState = unserialize($winnerState, ['allowed_classes' => [WinnerState::class]]);
     }
 }
