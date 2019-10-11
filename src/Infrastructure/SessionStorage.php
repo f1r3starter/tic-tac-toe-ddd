@@ -4,7 +4,10 @@ namespace App\Infrastructure;
 
 use App\Application\GameStorage;
 use App\Domain\Entity\Board;
+use App\Domain\Entity\BoardState;
+use App\Domain\ValueObject\Sign;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorage implements GameStorage
 {
@@ -16,11 +19,18 @@ class SessionStorage implements GameStorage
     private $session;
 
     /**
-     * @param SessionInterface $session
+     * @var SerializerInterface
      */
-    public function __construct(SessionInterface $session)
+    private $serializer;
+
+    /**
+     * @param SessionInterface $session
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(SessionInterface $session, SerializerInterface $serializer)
     {
         $this->session = $session;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -28,9 +38,10 @@ class SessionStorage implements GameStorage
      */
     public function restoreGameState(): Board
     {
-        return unserialize(
+        return $this->serializer->deserialize(
             $this->session->get(self::STORAGE_KEY),
-            ['allowed_classes' => [Board::class]]
+            Board::class,
+            'json'
         );
     }
 
@@ -47,7 +58,10 @@ class SessionStorage implements GameStorage
      */
     public function saveGameState(Board $board): void
     {
-        $this->session->set(self::STORAGE_KEY, serialize($board));
+        $this->session->set(
+            self::STORAGE_KEY,
+            $this->serializer->serialize($board, 'json')
+        );
     }
 
     public function restartGame(): void
