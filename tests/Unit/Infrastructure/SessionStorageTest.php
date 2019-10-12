@@ -8,6 +8,7 @@ use App\Infrastructure\SessionStorage;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorageTest extends TestCase
 {
@@ -23,7 +24,9 @@ class SessionStorageTest extends TestCase
             ->method('get')
             ->willReturn(serialize($board));
 
-        $sessionStorage = new SessionStorage($sessionMock);
+        $serializer = $this->getSerializerMock();
+
+        $sessionStorage = new SessionStorage($sessionMock, $serializer);
         $restoredBoard = $sessionStorage->restoreGameState();
 
         $this->assertInstanceOf(Board::class, $restoredBoard);
@@ -37,6 +40,14 @@ class SessionStorageTest extends TestCase
         return $this->createMock(SessionInterface::class);
     }
 
+    /**
+     * @return MockObject|SerializerInterface
+     */
+    private function getSerializerMock(): MockObject
+    {
+        return $this->createMock(SerializerInterface::class);
+    }
+
     public function testGameStarted(): void
     {
         $gameStarted = true;
@@ -47,7 +58,9 @@ class SessionStorageTest extends TestCase
             ->method('has')
             ->willReturn($gameStarted);
 
-        $sessionStorage = new SessionStorage($sessionMock);
+        $serializer = $this->getSerializerMock();
+
+        $sessionStorage = new SessionStorage($sessionMock, $serializer);
 
         $this->assertEquals(
             $gameStarted,
@@ -67,7 +80,9 @@ class SessionStorageTest extends TestCase
             ->method('set')
             ->with('board', serialize($board));
 
-        $sessionStorage = new SessionStorage($sessionMock);
+        $serializer = $this->getSerializerMock();
+
+        $sessionStorage = new SessionStorage($sessionMock, $serializer);
         $sessionStorage->saveGameState($board);
     }
 
@@ -79,7 +94,9 @@ class SessionStorageTest extends TestCase
             ->method('remove')
             ->with('board');
 
-        $sessionStorage = new SessionStorage($sessionMock);
+        $serializer = $this->getSerializerMock();
+
+        $sessionStorage = new SessionStorage($sessionMock, $serializer);
         $sessionStorage->restartGame();
     }
 }
