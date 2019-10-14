@@ -17,14 +17,10 @@ class GameStateTest extends TestCase
 
         $gameState = new GameState($board);
 
-        $this->assertEquals(
-            [
-                'boardState' => $board->getBoardState()->getState(),
-                'nextMove' => $board->getLastMove()->getOppositeSign(),
-                'isOver' => $board->isGameOver(),
-                'playerSign' => $board->getPlayerSign()->getValue(),
-                'winner' => $board->getWinner(),
-            ],
-            $gameState);
+        $this->assertEquals($board->getBoardState()->getState(), $gameState->getBoardState());
+        $this->assertEquals($board->getLastMove()->getOppositeSign(), $gameState->getNextMove());
+        $this->assertEquals($board->isGameOver(), $gameState->isOver());
+        $this->assertEquals($board->getPlayerSign()->getValue(), $gameState->getPlayerSign());
+        $this->assertEquals($board->getWinner(), $gameState->getWinner());
     }
 }

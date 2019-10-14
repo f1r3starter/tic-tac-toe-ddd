@@ -52,6 +52,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "test": [
+            "vendor/bin/phpunit -c tests/phpunit.xml --coverage-clover tests/coverage.xml --log-junit tests/junit-report.xml"
         ]
     },
     "conflict": {
