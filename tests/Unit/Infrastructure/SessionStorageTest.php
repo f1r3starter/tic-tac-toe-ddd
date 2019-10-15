@@ -78,7 +78,7 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('set')
-            ->with('board', serialize($board));
+            ->with('board', null);
 
         $serializer = $this->getSerializerMock();
 
