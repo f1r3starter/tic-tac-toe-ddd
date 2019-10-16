@@ -6,10 +6,10 @@ use App\Application\GameModifier;
 use App\Domain\Entity\Board;
 use App\Domain\Exception\IncorrectSign;
 use App\Presentation\DTO\GameState;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
 use function json_decode;
 use function json_last_error;
 

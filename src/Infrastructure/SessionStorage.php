@@ -4,10 +4,8 @@ namespace App\Infrastructure;
 
 use App\Application\GameStorage;
 use App\Domain\Entity\Board;
-use App\Domain\Entity\BoardState;
-use App\Domain\ValueObject\Sign;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorage implements GameStorage
 {

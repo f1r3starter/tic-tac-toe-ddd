@@ -35,5 +35,7 @@ class GetStateTest extends WebTestCase
             'GET',
             self::ENDPOINT
         );
+
+        $this->assertEquals('', $client->getResponse());
     }
 }

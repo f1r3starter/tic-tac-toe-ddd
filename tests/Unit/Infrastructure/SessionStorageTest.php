@@ -5,10 +5,10 @@ namespace App\Tests\Unit\Infrastructure;
 use App\Domain\Entity\Board;
 use App\Domain\ValueObject\Sign;
 use App\Infrastructure\SessionStorage;
+use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorageTest extends TestCase
 {
