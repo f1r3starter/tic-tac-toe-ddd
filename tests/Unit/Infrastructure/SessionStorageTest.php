@@ -5,10 +5,10 @@ namespace App\Tests\Unit\Infrastructure;
 use App\Domain\Entity\Board;
 use App\Domain\ValueObject\Sign;
 use App\Infrastructure\SessionStorage;
-use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorageTest extends TestCase
 {
@@ -22,9 +22,14 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('get')
-            ->willReturn(serialize($board));
+            ->willReturn('123');
 
         $serializer = $this->getSerializerMock();
+        $serializer
+            ->expects($this->once())
+            ->method('deserialize')
+            ->with('123', Board::class, 'json')
+            ->willReturn($board);
 
         $sessionStorage = new SessionStorage($sessionMock, $serializer);
         $restoredBoard = $sessionStorage->restoreGameState();
@@ -78,9 +83,14 @@ class SessionStorageTest extends TestCase
         $sessionMock
             ->expects($this->once())
             ->method('set')
-            ->with('board', null);
+            ->with('board', '123');
 
         $serializer = $this->getSerializerMock();
+        $serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with($board, 'json')
+            ->willReturn('123');
 
         $sessionStorage = new SessionStorage($sessionMock, $serializer);
         $sessionStorage->saveGameState($board);

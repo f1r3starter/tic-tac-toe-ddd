@@ -33,9 +33,15 @@ class GetStateTest extends WebTestCase
         );
         $client->request(
             'GET',
-            self::ENDPOINT
+            self::ENDPOINT,
+            [],
+            [],
+            ['Accept' => 'application/json']
         );
 
-        $this->assertEquals('', $client->getResponse());
+        $state = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals(Sign::CROSS, $state['playerSign']);
+        $this->assertEquals(false, $state['isOver']);
     }
 }
