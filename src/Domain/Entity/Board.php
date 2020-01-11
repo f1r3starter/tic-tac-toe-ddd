@@ -38,11 +38,12 @@ class Board
      * @param Sign $playerSign
      * @param BoardState|null $boardState
      * @param WinnerState|null $winnerState
+     * @param Sign|null $lastMove
      */
-    public function __construct(Sign $playerSign, ?BoardState $boardState = null, ?WinnerState $winnerState = null)
+    public function __construct(Sign $playerSign, ?BoardState $boardState = null, ?WinnerState $winnerState = null, ?Sign $lastMove = null)
     {
         $players = [$playerSign, new Sign($playerSign->getOppositeSign())];
-        $this->lastMove = $players[array_rand($players)];
+        $this->lastMove = $lastMove ?? $players[array_rand($players)];
         $this->boardState = $boardState ?? new BoardState();
         $this->playerSign = $playerSign;
         $this->winnerState = $winnerState ?? new WinnerState();

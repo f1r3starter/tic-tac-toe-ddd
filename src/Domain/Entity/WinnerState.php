@@ -15,22 +15,22 @@ class WinnerState
     private const INIT_VALUE = [0, 0];
 
     /**
-     * @var array
+     * @var int[][]
      */
     private $columns;
 
     /**
-     * @var array
+     * @var int[][]
      */
     private $rows;
 
     /**
-     * @var array
+     * @var int[][]
      */
     private $diagonal;
 
     /**
-     * @var array
+     * @var int[][]
      */
     private $oppositeDiagonal;
 
@@ -50,7 +50,7 @@ class WinnerState
     }
 
     /**
-     * @return array
+     * @return int[][]
      */
     private function initSide(): array
     {
@@ -63,7 +63,7 @@ class WinnerState
      */
     public function makeMove(Move $move, Sign $sign): void
     {
-        if (Sign::EMPTY === $sign->getValue()) {
+        if ($sign->isEmpty()) {
             throw new IncorrectMoveSign();
         }
 
