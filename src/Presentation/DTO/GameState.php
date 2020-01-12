@@ -3,11 +3,12 @@
 namespace App\Presentation\DTO;
 
 use App\Domain\Entity\Board;
+use App\Domain\ValueObject\Sign;
 
 class GameState
 {
     /**
-     * @var array
+     * @var Sign[][]
      */
     private $boardState;
 
@@ -44,7 +45,7 @@ class GameState
     }
 
     /**
-     * @return array
+     * @return Sign[][]
      */
     public function getBoardState(): array
     {

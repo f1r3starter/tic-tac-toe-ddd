@@ -58,6 +58,14 @@ class Sign
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return self::EMPTY === $this->sign;
+    }
+
+    /**
      * @return string
      */
     public function getValue(): string
