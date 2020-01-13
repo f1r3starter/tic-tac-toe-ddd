@@ -4,8 +4,8 @@ namespace App\Infrastructure;
 
 use App\Application\GameStorage;
 use App\Domain\Entity\Board;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SessionStorage implements GameStorage
 {
@@ -39,7 +39,7 @@ class SessionStorage implements GameStorage
         return $this->serializer->deserialize(
             $this->session->get(self::STORAGE_KEY),
             Board::class,
-            'json'
+            'xml'
         );
     }
 
@@ -58,7 +58,7 @@ class SessionStorage implements GameStorage
     {
         $this->session->set(
             self::STORAGE_KEY,
-            $this->serializer->serialize($board, 'json')
+            $this->serializer->serialize($board, 'xml')
         );
     }
 
