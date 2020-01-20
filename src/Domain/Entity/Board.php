@@ -67,7 +67,7 @@ class Board
         $this->winnerState->makeMove($move, $sign);
         $this->lastMove = $sign;
 
-        $this->winner = $this->winnerState->hasWinner() ? $sign : null;
+        $this->winner = $this->winnerState->isOver() ? $sign : null;
     }
 
     /**

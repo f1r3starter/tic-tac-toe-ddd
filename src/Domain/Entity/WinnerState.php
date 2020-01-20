@@ -37,16 +37,17 @@ class WinnerState
     /**
      * @var bool
      */
-    private $hasWinner = false;
+    private $isOver;
 
-    public function __construct()
+    public function __construct(?array $columns = null, ?array $rows = null, ?array $diagonal = null, ?array $oppositeDiagonal = null, ?bool $isOver = false)
     {
         $defaultValue = $this->initSide();
 
-        $this->columns = $defaultValue;
-        $this->rows = $defaultValue;
-        $this->diagonal = self::INIT_VALUE;
-        $this->oppositeDiagonal = self::INIT_VALUE;
+        $this->columns = $columns ?? $defaultValue;
+        $this->rows = $rows ?? $defaultValue;
+        $this->diagonal = $diagonal ?? self::INIT_VALUE;
+        $this->oppositeDiagonal = $oppositeDiagonal ?? self::INIT_VALUE;
+        $this->isOver = $isOver ?? false;
     }
 
     /**
@@ -76,7 +77,7 @@ class WinnerState
             $this->updateOppositeDiagonal($move->getColumn(), $move->getRow(), $index),
         ];
 
-        $this->hasWinner = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
+        $this->isOver = in_array(BoardState::SIDE_LENGTH, $sidesStates, true);
     }
 
     /**
@@ -128,8 +129,8 @@ class WinnerState
     /**
      * @return bool
      */
-    public function hasWinner(): bool
+    public function isOver(): bool
     {
-        return $this->hasWinner;
+        return $this->isOver;
     }
 }
