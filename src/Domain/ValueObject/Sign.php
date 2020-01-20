@@ -24,7 +24,7 @@ class Sign
     /**
      * @param string|null $sign
      */
-    public function __construct(?string $sign)
+    public function __construct(?string $sign = self::EMPTY)
     {
         if (!in_array($sign, self::AVAILABLE_VALUES, true)) {
             throw new IncorrectSign();
