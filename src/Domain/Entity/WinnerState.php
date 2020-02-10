@@ -25,12 +25,12 @@ class WinnerState
     private $rows;
 
     /**
-     * @var int[][]
+     * @var int[]
      */
     private $diagonal;
 
     /**
-     * @var int[][]
+     * @var int[]
      */
     private $oppositeDiagonal;
 
@@ -39,6 +39,13 @@ class WinnerState
      */
     private $isOver;
 
+    /**
+     * @param int[][]|null $columns
+     * @param int[][]|null $rows
+     * @param int[]|null $diagonal
+     * @param int[]|null $oppositeDiagonal
+     * @param bool|null $isOver
+     */
     public function __construct(?array $columns = null, ?array $rows = null, ?array $diagonal = null, ?array $oppositeDiagonal = null, ?bool $isOver = false)
     {
         $defaultValue = $this->initSide();
