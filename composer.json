@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "phpstan/phpstan": "^0.12.9",
         "ramsey/uuid": "^3.8",
         "symfony/console": "4.3.*",
         "symfony/dotenv": "4.3.*",
