@@ -26,8 +26,12 @@ services:
             - '../src/Presentation/DTO/*'
         tags: ['controller.service_arguments']
 
-    Symfony\Component\Serializer\SerializerInterface:
-        class: Symfony\Component\Serializer\SerializerInterface
-        factory: ['App\Infrastructure\SerializerFactory', 'create']
+    normalizer:
+        class: Symfony\Component\Serializer\Normalizer\PropertyNormalizer
         public: false
-        tags: [serializer]
+        tags: [serializer.normalizer]
+
+    encoder:
+        class: Symfony\Component\Serializer\Encoder\XmlEncoder
+        public: false
+        tags: [serializer.encoder]
