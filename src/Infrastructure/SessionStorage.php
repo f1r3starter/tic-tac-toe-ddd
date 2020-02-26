@@ -39,7 +39,7 @@ class SessionStorage implements GameStorage
         return $this->serializer->deserialize(
             $this->session->get(self::STORAGE_KEY),
             Board::class,
-            'xml'
+            'json'
         );
     }
 
@@ -58,7 +58,7 @@ class SessionStorage implements GameStorage
     {
         $this->session->set(
             self::STORAGE_KEY,
-            $this->serializer->serialize($board, 'xml')
+            $this->serializer->serialize($board, 'json')
         );
     }
 
